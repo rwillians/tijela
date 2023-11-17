@@ -6,11 +6,12 @@ defmodule Tijela.Accounting do
   import Bookk.InterledgerEntry, only: [to_journal_entries: 1]
   import Bookk.JournalEntry, only: [to_operations: 1]
   import Bookk.Operation, only: [to_delta_amount: 1]
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query
   import Ex.Ecto.Changeset, only: [to_errors_by_field: 1]
+  import Ex.Ecto.Pagination, only: [paginate: 3]
   import Tijela.Accounting.ChartOfAccounts, only: [account_id: 2]
   import Tijela.Accounting.Transactionable, only: [to_interledger_entry: 1]
-  import Uuid, only: [uuidv4: 0]
+  import Uuid, only: [uuid: 0]
 
   alias Bookk.Operation, as: Op
   alias Tijela.Accounting.Account
@@ -37,6 +38,31 @@ defmodule Tijela.Accounting do
   end
 
   @doc """
+  Get's the history of balance changes for a given account.
+  Sorted by most recent (`created_at`) first.
+
+  ## Known issue
+
+  Paginating DESC using `limit` and `offset` is prone to return
+  duplicated results as new transactions are commited to the database.
+  A solution would be using a cursor-based pagination.
+  """
+  @spec get_history_for(account_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
+          Ex.Ecto.Pagination.Page.t(Tijela.Accounting.AccountTransaction.t())
+
+  def get_history_for(<<_, _::binary>> = account_id, pagination_control \\ [])
+      when is_list(pagination_control) do
+    query =
+      from record in AccountTransaction,
+        where: record.account_id == ^account_id,
+        order_by: [desc: record.transaction_id]
+        #                ↑ UUID v7 is time-based, therefore it's safe
+        #                  to sort by it.
+
+    paginate(@repo, query, pagination_control)
+  end
+
+  @doc """
   Takes a transactionable struct an commits a transaction that reverses
   it.
   """
@@ -44,7 +70,7 @@ defmodule Tijela.Accounting do
         when tx: Tijela.Accounting.Transactionable.t()
 
   def revert(repo \\ @repo, %_{} = tx),
-    do: transact(repo, %ReverseTransaction{id: uuidv4(), transaction: tx})
+    do: transact(repo, %ReverseTransaction{id: uuid(), transaction: tx})
 
   @doc """
   Persists the effects of a transactionable struct into the database.
@@ -53,7 +79,7 @@ defmodule Tijela.Accounting do
         when tx: Tijela.Accounting.Transactionable.t()
 
   def transact(repo \\ @repo, tx)
-  def transact(repo, %_{id: nil} = tx), do: transact(repo, %{tx | id: uuidv4()})
+  def transact(repo, %_{id: nil} = tx), do: transact(repo, %{tx | id: uuid()})
 
   def transact(repo, %_{id: _} = tx) do
     interledger_entry = to_interledger_entry(tx)
@@ -79,8 +105,8 @@ defmodule Tijela.Accounting do
   #
 
   defp op_to_multi(%Op{} = op, ledger_name, tx_id, now) do
-    multi_a_name = uuidv4()
-    multi_b_name = uuidv4()
+    multi_a_name = uuid()
+    multi_b_name = uuid()
 
     account_id = account_id(ledger_name, op.account_head)
     delta_amount = to_delta_amount(op)

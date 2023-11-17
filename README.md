@@ -12,7 +12,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
 -   **Depósito**: usuário deposita saldo em sua própria conta (`Tijela.Wallet.deposit_balance/2`).
 
     ```elixir
-    user_id = Uuid.uuidv4()
+    user_id = Uuid.uuid()
 
     0        = Tijela.Wallet.get_balance(user_id)
     {:ok, _} = Tijela.Wallet.deposit_balance(user_id, 500_00)
@@ -24,8 +24,8 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
 -   **Transferência**: um usuário transfere saldo para outro usuário (`Tijela.Wallet.transfer_balance/3`);
 
     ```elixir
-    sender_id = Uuid.uuidv4()
-    recipient_id = Uuid.uuidv4()
+    sender_id = Uuid.uuid()
+    recipient_id = Uuid.uuid()
 
     {:ok, _} = Tijela.Wallet.deposit_balance(sender_id, 500_00)
     {:ok, _} = Tijela.Wallet.transfer_balance(sender_id, 300_00, to: recipient_id)
@@ -37,9 +37,9 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
 -   **Estorno**: estorna uma transferência (`Tijela.Wallet.refund_transfer/1`).
 
     ```elixir
-    user_a_id = Uuid.uuidv4()
-    user_b_id = Uuid.uuidv4()
-    user_c_id = Uuid.uuidv4()
+    user_a_id = Uuid.uuid()
+    user_b_id = Uuid.uuid()
+    user_c_id = Uuid.uuid()
 
     {:ok, _}           = Tijela.Wallet.deposit_balance(user_a_id, 500_00)
     {:ok, transfer_ab} = Tijela.Wallet.transfer_balance(user_a_id, 300_00, to: user_b_id)
@@ -56,6 +56,44 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
     500_00 = Tijela.Wallet.get_balance(user_a_id)
     0      = Tijela.Wallet.get_balance(user_b_id)
     0      = Tijela.Wallet.get_balance(user_c_id)
+    ```
+
+  - **Histórico de transações**: uma lista paginada demonstrando as transações
+    que ocorreram na wallet de um usuário (`Tijela.Accounting.AccountTransaction`).
+
+    ```elixir
+    user_a_id = Uuid.uuid()
+    user_b_id = Uuid.uuid()
+
+    {:ok, _}           = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
+    {:ok, _}           = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
+    {:ok, transfer_ab} = Tijela.Wallet.transfer_balance(user_a_id, 300_00, to: user_b_id)
+
+    %{
+      items: [
+        %{
+          delta_amount: 250_00,
+          balance_after: 250_00
+        },
+        %{
+          delta_amount: 250_00,
+          balance_after: 500_00
+        },
+        %{
+          delta_amount: -300_00,
+          balance_after: 200_00
+        },
+      ]
+    } = Tijela.Wallet.get_history_for(user_a_id)
+
+    %{
+      items: [
+        %{
+          delta_amount: 300,
+          balance_after: 300
+        }
+      ]
+    } = Tijela.Wallet.get_history_for(user_b_id)
     ```
 
 

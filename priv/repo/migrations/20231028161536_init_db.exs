@@ -14,6 +14,7 @@ defmodule Tijela.Repo.Migrations.InitDb do
       add :updated_at, :utc_datetime_usec, null: false
     end
 
+    #      ↓ used when querying for all accounts of a given ledger
     create index(:accounts, [:ledger_id])
 
     #
@@ -27,5 +28,10 @@ defmodule Tijela.Repo.Migrations.InitDb do
       add :balance_after, :integer, null: false
       add :created_at, :utc_datetime_usec, null: false
     end
+
+    #        used when querying for transaction history of a given account.
+    #        `transaction_id` is a UUID v7, which is time-based therefore its
+    #      ↓ safe to sort by it.
+    create index(:accounts_transactions, [:account_id, "transaction_id DESC"])
   end
 end

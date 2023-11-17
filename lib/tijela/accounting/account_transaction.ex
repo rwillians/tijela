@@ -13,7 +13,7 @@ defmodule Tijela.Accounting.AccountTransaction do
   @typedoc false
   @type t :: %Tijela.Accounting.AccountTransaction{
           account_id: String.t(),
-          transaction_id: Ecto.UUID.t(),
+          transaction_id: Ex.Ecto.ULID.t(),
           delta_amount: integer,
           balance_after: integer,
           created_at: DateTime.t()
@@ -22,7 +22,7 @@ defmodule Tijela.Accounting.AccountTransaction do
   @primary_key false
   schema "accounts_transactions" do
     field :account_id, :string, primary_key: true
-    field :transaction_id, Ecto.UUID, primary_key: true
+    field :transaction_id, Ex.Ecto.ULID, primary_key: true
     field :delta_amount, :integer
     field :balance_after, :integer
     field :created_at, :utc_datetime_usec

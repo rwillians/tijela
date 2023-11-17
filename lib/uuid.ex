@@ -2,7 +2,7 @@ defmodule Uuid do
   @moduledoc false
 
   @doc false
-  @spec uuidv4() :: String.t()
+  @spec uuid() :: String.t()
 
-  defdelegate uuidv4, to: Ecto.UUID, as: :generate
+  defdelegate uuid, to: Ex.Ecto.ULID, as: :generate
 end

@@ -38,6 +38,18 @@ defmodule Tijela.Wallet do
   end
 
   @doc """
+  Get's the history of balance changes for a given user's wallet.
+  Sorted by most recent transactions first.
+  """
+  @spec get_history_for(user_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
+          Ex.Ecto.Pagination.Page.t(Tijela.Accounting.AccountTransaction.t())
+
+  def get_history_for(<<_, _::binary>> = user_id, pagination_control \\ []) do
+    ChartOfAccounts.account_id({:user, user_id}, :cash)
+    |> Accounting.get_history_for(pagination_control)
+  end
+
+  @doc """
   Refunds a transfer that was previously made.
   """
   @spec refund_transfer(Tijela.Wallet.Transfer.t()) ::
