@@ -32,7 +32,7 @@ defmodule Cumbuca.MixProject do
 
   defp deps do
     [
-      {:bookk, "~> 0.1.2"},
+      {:bookk, "~> 0.1.3"},
       {:credo, "~> 1.7.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4.2", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.10.2"},

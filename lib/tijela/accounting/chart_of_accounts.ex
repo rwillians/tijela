@@ -1,5 +1,8 @@
 defmodule Tijela.Accounting.ChartOfAccounts do
-  @moduledoc false
+  @moduledoc """
+  This is the map of patterns for all Ledgers and Accounts in the
+  system.
+  """
 
   @behaviour Bookk.ChartOfAccounts
 
@@ -7,9 +10,9 @@ defmodule Tijela.Accounting.ChartOfAccounts do
   alias Bookk.AccountHead, as: Head
 
   @classes %{
-    current_assets: %C{id: "CA", parent_id: "A", natural_balance: :debit,  name: "Current Assets"},
-    owners_equity:  %C{id: "OE", parent_id: nil, natural_balance: :credit, name: "Owner's Equity"},
-    liabilities:    %C{id: "L",  parent_id: nil, natural_balance: :credit, name: "Liabilities"}
+    current_assets: %C{id: "CA", parent_id: "A", natural_balance: :debit, name: "Current Assets"},
+    owners_equity: %C{id: "OE", parent_id: nil, natural_balance: :credit, name: "Owner's Equity"},
+    liabilities: %C{id: "L", parent_id: nil, natural_balance: :credit, name: "Liabilities"}
   }
 
   @impl Bookk.ChartOfAccounts
@@ -38,7 +41,12 @@ defmodule Tijela.Accounting.ChartOfAccounts do
     }
   end
 
-  @impl Bookk.ChartOfAccounts
+  @doc """
+  Given a ledger's name and a `Bookk.AccountHead` struct, it returns
+  the id of the account.
+  """
+  @spec account_id(ledger_name :: String.t(), account_head :: Bookk.AccountHead.t()) :: String.t()
+
   def account_id(<<_, _::binary>> = ledger_name, %Head{} = account_head),
     do: ledger_name <> ":" <> account_head.name
 
