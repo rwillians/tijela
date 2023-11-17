@@ -36,8 +36,8 @@ defmodule Tijela.WalletTest do
 
   describe "Tijela.Wallet.get_transactions_history/1" do
     test "lists the change in a wallet's balance (desc)" do
-      user_a_id = Uuid.uuid()
-      user_b_id = Uuid.uuid()
+      user_a_id = uuid()
+      user_b_id = uuid()
 
       {:ok, _} = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
       {:ok, _} = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
@@ -73,8 +73,8 @@ defmodule Tijela.WalletTest do
 
   describe "Tijela.Wallet.get_transactions_history/2" do
     test "gets the history of changes in wallet's balance (paginated)" do
-      user_a_id = Uuid.uuid()
-      user_b_id = Uuid.uuid()
+      user_a_id = uuid()
+      user_b_id = uuid()
 
       {:ok, _} = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
       {:ok, _} = Tijela.Wallet.deposit_balance(user_a_id, 250_00)
