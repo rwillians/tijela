@@ -18,9 +18,9 @@ defmodule Tijela.Wallet do
           {:ok, tx :: Tijela.Accounting.Transactionable.t()}
           | {:error, term}
 
-  #                              in cents or the smallest fraction of
-  #                            ↓ the currency being used
-  def deposit_balance(user_id, amount) do
+  def deposit_balance(<<_, _::binary>> = user_id, amount) do
+    #           in cents or the smallest fraction ↑
+    #           of the currency being used
     Accounting.transact(%Deposit{
       user_id: user_id,
       amount: amount
@@ -29,6 +29,9 @@ defmodule Tijela.Wallet do
 
   @doc """
   Get's the displayable balance of a user's wallet.
+
+  By displayable balance I mean the cash balance from the user's
+  ledger.
   """
   @spec get_balance(repo :: module, user_id :: String.t()) :: integer
 
@@ -40,6 +43,9 @@ defmodule Tijela.Wallet do
   @doc """
   Get's the history of balance changes for a given user's wallet.
   Sorted by most recent transactions first.
+
+  We don't need to expose all accounts to the user, that's why we're
+  only taking the history for the user's cash account.
 
   ## Known Issue
 
