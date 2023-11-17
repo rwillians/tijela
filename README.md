@@ -70,6 +70,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
     {:ok, transfer_ab} = Tijela.Wallet.transfer_balance(user_a_id, 300_00, to: user_b_id)
 
     %{
+      # uma página de paginação
       items: [
         # tranação mais recente primeiro
         %{
@@ -85,7 +86,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
           balance_after: 250_00
         }
       ]
-    } = Tijela.Wallet.get_history_for(user_a_id)
+    } = Tijela.Wallet.get_history_for(user_a_id, limit: 10, offset: 0)
 
     %{
       items: [
