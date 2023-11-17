@@ -1,7 +1,8 @@
 #
 #   COMPILE-TIME CONFIGURATIONS
 #   ===========================
-#   Config overrides for any environment other than `:dev` and `:test`.
+#   Config overrides for all environments other than development and
+#   test.
 #
 
 import Config
