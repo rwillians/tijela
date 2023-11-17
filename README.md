@@ -15,7 +15,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
     user_id = Uuid.uuidv4()
 
     0        = Tijela.Wallet.get_balance(user_id)
-    {:ok, _} = Play.deposit_balance(user_id, 500_00)
+    {:ok, _} = Tijela.Wallet.deposit_balance(user_id, 500_00)
     500_00   = Tijela.Wallet.get_balance(user_id)
     ```
 
@@ -27,8 +27,8 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
     sender_id = Uuid.uuidv4()
     recipient_id = Uuid.uuidv4()
 
-    {:ok, _} = Play.deposit_balance(sender_id, 500_00)
-    {:ok, _} = Play.transfer_balance(sender_id, 300_00, to: recipient_id)
+    {:ok, _} = Tijela.Wallet.deposit_balance(sender_id, 500_00)
+    {:ok, _} = Tijela.Wallet.transfer_balance(sender_id, 300_00, to: recipient_id)
 
     200_00 = Tijela.Wallet.get_balance(sender_id)
     300_00 = Tijela.Wallet.get_balance(recipient_id)
@@ -41,17 +41,17 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
     user_b_id = Uuid.uuidv4()
     user_c_id = Uuid.uuidv4()
 
-    {:ok, _}           = Play.deposit_balance(user_a_id, 500_00)
-    {:ok, transfer_ab} = Play.transfer_balance(user_a_id, 300_00, to: user_b_id)
-    {:ok, transfer_bc} = Play.transfer_balance(user_b_id, 50_00, to: user_c_id)
+    {:ok, _}           = Tijela.Wallet.deposit_balance(user_a_id, 500_00)
+    {:ok, transfer_ab} = Tijela.Wallet.transfer_balance(user_a_id, 300_00, to: user_b_id)
+    {:ok, transfer_bc} = Tijela.Wallet.transfer_balance(user_b_id, 50_00, to: user_c_id)
 
     200_00 = Tijela.Wallet.get_balance(user_a_id)
     250_00 = Tijela.Wallet.get_balance(user_b_id)
     50_00  = Tijela.Wallet.get_balance(user_c_id)
 
-    {:error, :insufficient_balance} = Play.refund_transfer(transfer_ab)
-    {:ok, _}                        = Play.refund_transfer(transfer_bc)
-    {:ok, _}                        = Play.refund_transfer(transfer_ab)
+    {:error, :insufficient_balance} = Tijela.Wallet.refund_transfer(transfer_ab)
+    {:ok, _}                        = Tijela.Wallet.refund_transfer(transfer_bc)
+    {:ok, _}                        = Tijela.Wallet.refund_transfer(transfer_ab)
 
     500_00 = Tijela.Wallet.get_balance(user_a_id)
     0      = Tijela.Wallet.get_balance(user_b_id)
