@@ -67,7 +67,7 @@ A interledger é transformada em uma lista de _journal entries_ (`Bookk.JournalE
 
 Para cada operação são produzidas duas _queries_:
 1.  **Upsert da conta**: caso a conta (`Tijela.Accounting.Account`) já exista, incrementa o saldo e atualiza o campo `updated_at`, do contrário cria a conta;
-2.  **Insere uma linha de log**: insere uma `Tijela.Accounting.AccountTransaction` a qual serve como um log de uma transação contábil executada contra uma conta. Essa struct contem o valor da alteração de saldo (`delta_amount`) da conta e a quantidade de saldo que ficou na conta após a alteração (`balance_after`).
+2.  **Insere uma linha de log**: insere uma `Tijela.Accounting.AccountTransaction` a qual serve como um log de uma transação contábil executada contra uma conta. Essa struct contem o valor da alteração de saldo da conta (`delta_amount`) e a quantidade de saldo que ficou na conta após a alteração (`balance_after`).
 
 `Ecto.Multi` é utilizado para agregar todas as operações necessárias em uma única transação.
 

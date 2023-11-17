@@ -1,5 +1,7 @@
 defmodule Tijela.Wallet.Deposit do
-  @moduledoc false
+  @moduledoc """
+  Represents balanced deposited by a user into their own wallet.
+  """
 
   @typedoc false
   @type t :: %Tijela.Wallet.Deposit{

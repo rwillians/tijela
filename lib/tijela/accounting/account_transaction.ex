@@ -1,5 +1,8 @@
 defmodule Tijela.Accounting.AccountTransaction do
-  @moduledoc false
+  @moduledoc """
+  Records a history of changes to an account's balance, cause by
+  accounting transactions.
+  """
 
   use Ecto.Schema
 

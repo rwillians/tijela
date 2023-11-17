@@ -1,5 +1,7 @@
 defmodule Tijela.Accounting.ReverseTransaction do
-  @moduledoc false
+  @moduledoc """
+  This is an accounting transaction that reverses another transaction.
+  """
 
   @typedoc false
   @type t :: %Tijela.Accounting.ReverseTransaction{

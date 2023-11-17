@@ -1,5 +1,7 @@
 defmodule Tijela.Wallet do
-  @moduledoc false
+  @moduledoc """
+  The Wallet feature is how users interact with their money.
+  """
 
   alias Tijela.Accounting
   alias Tijela.Accounting.ChartOfAccounts
@@ -8,12 +10,16 @@ defmodule Tijela.Wallet do
 
   @repo Tijela.Repo
 
-  @doc false
+  @doc """
+  Creates and commits a transaction for a user depositing money into
+  their wallet.
+  """
   @spec deposit_balance(user_id :: String.t(), amount :: pos_integer) ::
           {:ok, tx :: Tijela.Accounting.Transactionable.t()}
           | {:error, term}
 
-  #                            ↓ em centavos ou menor unidade da moeda utilizada
+  #                              in cents or the smallest fraction of
+  #                            ↓ the currency being used
   def deposit_balance(user_id, amount) do
     Accounting.transact(%Deposit{
       user_id: user_id,
@@ -21,7 +27,9 @@ defmodule Tijela.Wallet do
     })
   end
 
-  @doc false
+  @doc """
+  Get's the displayable balance of a user's wallet.
+  """
   @spec get_balance(repo :: module, user_id :: String.t()) :: integer
 
   def get_balance(repo \\ @repo, <<_, _::binary>> = user_id) do
@@ -29,7 +37,9 @@ defmodule Tijela.Wallet do
     |> Accounting.get_account_balance(repo)
   end
 
-  @doc false
+  @doc """
+  Refunds a transfer that was previously made.
+  """
   @spec refund_transfer(Tijela.Wallet.Transfer.t()) ::
           {:ok, tx :: Tijela.Accounting.ReverseTransaction.t()}
           | {:error, :insufficient_balance}
@@ -45,7 +55,10 @@ defmodule Tijela.Wallet do
     |> to_normalized_result()
   end
 
-  @doc false
+  @doc """
+  Transfers balance from a user's wallet to another as long a the user
+  sending the money has enough balance.
+  """
   @spec transfer_balance(sender_id :: String.t(), amount :: pos_integer,
           to: recipient_id :: String.t()
         ) ::

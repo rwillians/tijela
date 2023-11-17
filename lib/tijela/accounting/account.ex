@@ -1,5 +1,12 @@
 defmodule Tijela.Accounting.Account do
-  @moduledoc false
+  @moduledoc """
+  Provides accounts for the accounting system.
+
+  There's no table for Ledgers, only accounts. To get all accounts
+  from a ledger, simply query for all accounts with the `ledger_id`
+  (where `ledger_id` is a deterministic value that you can get by
+  calling `Tijela.Accounting.ChartOfAccounts.ledger/1`).
+  """
 
   use Ecto.Schema
 
@@ -28,11 +35,9 @@ defmodule Tijela.Accounting.Account do
   @doc false
   @spec changeset(t, map) :: Ecto.Changeset.t()
 
-  @all_fields [:id, :ledger_id, :balance, :created_at, :updated_at]
-
   def changeset(%Account{} = value \\ %Account{}, %{} = fields) do
     value
-    |> cast(fields, @all_fields)
-    |> validate_required(@all_fields)
+    |> cast(fields, [:id, :ledger_id, :balance, :created_at, :updated_at])
+    |> validate_required([:id, :ledger_id, :balance, :created_at, :updated_at])
   end
 end

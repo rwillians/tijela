@@ -1,6 +1,4 @@
 defmodule Tijela do
-  @moduledoc false
-
   use Application
 
   @impl Application

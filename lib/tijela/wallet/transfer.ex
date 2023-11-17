@@ -1,5 +1,7 @@
 defmodule Tijela.Wallet.Transfer do
-  @moduledoc false
+  @moduledoc """
+  Represents a transfer of funds from one user's wallet to another.
+  """
 
   @typedoc false
   @type t :: %Tijela.Wallet.Transfer{

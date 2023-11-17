@@ -1,10 +1,13 @@
 defmodule Tijela.Accounting do
-  @moduledoc false
+  @moduledoc """
+  This module provides the "lower level" APIs used by `Tijela.Wallet`.
+  """
 
   import Bookk.InterledgerEntry, only: [to_journal_entries: 1]
   import Bookk.JournalEntry, only: [to_operations: 1]
   import Bookk.Operation, only: [to_delta_amount: 1]
   import Ecto.Query, only: [from: 2]
+  import Ex.Ecto.Changeset, only: [to_errors_by_field: 1]
   import Tijela.Accounting.ChartOfAccounts, only: [account_id: 2]
   import Tijela.Accounting.Transactionable, only: [to_interledger_entry: 1]
   import Uuid, only: [uuidv4: 0]
@@ -16,7 +19,10 @@ defmodule Tijela.Accounting do
 
   @repo Tijela.Repo
 
-  @doc false
+  @doc """
+  Get the balance of a given account.
+  If the account doesn't exist, `0` (zero) will be returned.
+  """
   @spec get_account_balance(account_id :: String.t(), repo :: module) :: integer
 
   def get_account_balance(<<_, _::binary>> = account_id, repo \\ @repo) do
@@ -30,14 +36,19 @@ defmodule Tijela.Accounting do
     end
   end
 
-  @doc false
+  @doc """
+  Takes a transactionable struct an commits a transaction that reverses
+  it.
+  """
   @spec revert(tx, repo :: module) :: {:ok, tx} | {:error, term}
         when tx: Tijela.Accounting.Transactionable.t()
 
   def revert(repo \\ @repo, %_{} = tx),
     do: transact(repo, %ReverseTransaction{id: uuidv4(), transaction: tx})
 
-  @doc false
+  @doc """
+  Persists the effects of a transactionable struct into the database.
+  """
   @spec transact(tx, repo :: module) :: {:ok, tx} | {:error, term}
         when tx: Tijela.Accounting.Transactionable.t()
 
@@ -53,12 +64,14 @@ defmodule Tijela.Accounting do
           op <- to_operations(journal_entry),
           do: op_to_multi(op, ledger_name, tx.id, now)
 
-    result =
-      Enum.reduce(multis, Ecto.Multi.new(), &Ecto.Multi.append(&2, &1))
-      |> repo.transaction()
+    multi =
+      multis
+      |> Enum.reduce(Ecto.Multi.new(), &Ecto.Multi.append(&2, &1))
 
-    with {:ok, _} <- result,
-         do: {:ok, tx}
+    case repo.transaction(multi) do
+      {:ok, _result} -> {:ok, tx}
+      {:error, _, changeset, _} -> {:error, to_errors_by_field(changeset)}
+    end
   end
 
   #
