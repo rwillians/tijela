@@ -86,7 +86,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
           balance_after: 250_00
         }
       ]
-    } = Tijela.Wallet.get_history_for(user_a_id, limit: 10, offset: 0)
+    } = Tijela.Wallet.get_transactions_history(user_a_id, limit: 10, offset: 0)
 
     %{
       items: [
@@ -95,7 +95,7 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
           balance_after: 300
         }
       ]
-    } = Tijela.Wallet.get_history_for(user_b_id)
+    } = Tijela.Wallet.get_transactions_history(user_b_id)
     ```
 
 

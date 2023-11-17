@@ -40,13 +40,19 @@ defmodule Tijela.Wallet do
   @doc """
   Get's the history of balance changes for a given user's wallet.
   Sorted by most recent transactions first.
+
+  ## Known Issue
+
+  The results doesn't specify what was each transaction (e.g.: deposit
+  and to whom it was made). A solution would be persisting the
+  transaction struct so that we have that info at disposal.
   """
-  @spec get_history_for(user_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
+  @spec get_transactions_history(user_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
           Ex.Ecto.Pagination.Page.t(Tijela.Accounting.AccountTransaction.t())
 
-  def get_history_for(<<_, _::binary>> = user_id, pagination_control \\ []) do
+  def get_transactions_history(<<_, _::binary>> = user_id, pagination_control \\ []) do
     ChartOfAccounts.account_id({:user, user_id}, :cash)
-    |> Accounting.get_history_for(pagination_control)
+    |> Accounting.get_account_transactions(pagination_control)
   end
 
   @doc """

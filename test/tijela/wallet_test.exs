@@ -34,7 +34,7 @@ defmodule Tijela.WalletTest do
     end
   end
 
-  describe "Tijela.Wallet.get_history_for/1" do
+  describe "Tijela.Wallet.get_transactions_history/1" do
     test "lists the change in a wallet's balance (desc)" do
       user_a_id = Uuid.uuid()
       user_b_id = Uuid.uuid()
@@ -58,7 +58,7 @@ defmodule Tijela.WalletTest do
             balance_after: 250_00
           }
         ]
-      } = Tijela.Wallet.get_history_for(user_a_id)
+      } = Tijela.Wallet.get_transactions_history(user_a_id)
 
       assert %{
         items: [
@@ -67,11 +67,11 @@ defmodule Tijela.WalletTest do
             balance_after: 300_00
           }
         ]
-      } = Tijela.Wallet.get_history_for(user_b_id)
+      } = Tijela.Wallet.get_transactions_history(user_b_id)
     end
   end
 
-  describe "Tijela.Wallet.get_history_for/2" do
+  describe "Tijela.Wallet.get_transactions_history/2" do
     test "gets the history of changes in wallet's balance (paginated)" do
       user_a_id = Uuid.uuid()
       user_b_id = Uuid.uuid()
@@ -91,7 +91,7 @@ defmodule Tijela.WalletTest do
             balance_after: 500_00
           }
         ]
-      } = Tijela.Wallet.get_history_for(user_a_id, limit: 2)
+      } = Tijela.Wallet.get_transactions_history(user_a_id, limit: 2)
 
       assert %{
         items: [
@@ -100,7 +100,7 @@ defmodule Tijela.WalletTest do
             balance_after: 250_00
           }
         ]
-      } = Tijela.Wallet.get_history_for(user_a_id, offset: 2)
+      } = Tijela.Wallet.get_transactions_history(user_a_id, offset: 2)
     end
   end
 

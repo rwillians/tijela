@@ -47,17 +47,18 @@ defmodule Tijela.Accounting do
   duplicated results as new transactions are commited to the database.
   A solution would be using a cursor-based pagination.
   """
-  @spec get_history_for(account_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
+  @spec get_account_transactions(account_id :: String.t(), Ex.Ecto.Pagination.pagination_control()) ::
           Ex.Ecto.Pagination.Page.t(Tijela.Accounting.AccountTransaction.t())
 
-  def get_history_for(<<_, _::binary>> = account_id, pagination_control \\ [])
+  def get_account_transactions(<<_, _::binary>> = account_id, pagination_control \\ [])
       when is_list(pagination_control) do
     query =
       from record in AccountTransaction,
         where: record.account_id == ^account_id,
         order_by: [desc: record.transaction_id]
-        #                ↑ UUID v7 is time-based, therefore it's safe
-        #                  to sort by it.
+
+    #                ↑ UUID v7 is time-based, therefore it's safe
+    #                  to sort by it.
 
     paginate(@repo, query, pagination_control)
   end
