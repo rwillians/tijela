@@ -8,6 +8,8 @@ defmodule Tijela.Wallet.Deposit do
           id: String.t(),
           user_id: String.t(),
           amount: pos_integer
+          #       ↑ in cents or smallest unit supported by the
+          #         currency being used
         }
 
   defstruct [:id, :user_id, :amount]

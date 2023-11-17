@@ -2,7 +2,7 @@
 
 ## TL;DR:
 
-Confira o arquivo [`test/tijela/wallet_test.exs`](https://github.com/rwillians/tijela/blob/simples/test/tijela/wallet_test.exs).
+Confira o arquivo [`test/tijela/wallet_test.exs`](https://github.com/rwillians/tijela/blob/main/test/tijela/wallet_test.exs).
 
 
 ## Introdução
@@ -126,7 +126,7 @@ asdf install
 ```
 
 ```sh
-# requer postgres rodando localmente -- veja `config/dev.exs`
+# requer postgres rodando localmente -- veja `config/runtime.exs`
 mix setup
 ```
 

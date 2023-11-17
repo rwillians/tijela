@@ -55,17 +55,16 @@ defmodule Tijela.Accounting do
     query =
       from record in AccountTransaction,
         where: record.account_id == ^account_id,
+        #                  UUID v7 is time-based, therefore it's safe
+        #                ↓ to sort by it.
         order_by: [desc: record.transaction_id]
-
-    #                ↑ UUID v7 is time-based, therefore it's safe
-    #                  to sort by it.
 
     paginate(@repo, query, pagination_control)
   end
 
   @doc """
-  Takes a transactionable struct an commits a transaction that reverses
-  it.
+  Takes a transactionable struct then commits a transaction that
+  reverses it.
   """
   @spec revert(tx, repo :: module) :: {:ok, tx} | {:error, term}
         when tx: Tijela.Accounting.Transactionable.t()

@@ -9,6 +9,8 @@ defmodule Tijela.Wallet.Transfer do
           sender_id: String.t(),
           recipient_id: String.t(),
           amount: pos_integer
+          #       ↑ in cents or smallest unit supported by the
+          #         currency being used
         }
 
   defstruct [:id, :sender_id, :recipient_id, :amount]
