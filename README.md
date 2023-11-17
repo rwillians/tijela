@@ -71,18 +71,19 @@ biblioteca [Bookk](https://github.com/rwillians/bookk):
 
     %{
       items: [
+        # tranação mais recente primeiro
         %{
-          delta_amount: 250_00,
-          balance_after: 250_00
+          delta_amount: -300_00,
+          balance_after: 200_00
         },
         %{
           delta_amount: 250_00,
           balance_after: 500_00
         },
         %{
-          delta_amount: -300_00,
-          balance_after: 200_00
-        },
+          delta_amount: 250_00,
+          balance_after: 250_00
+        }
       ]
     } = Tijela.Wallet.get_history_for(user_a_id)
 
